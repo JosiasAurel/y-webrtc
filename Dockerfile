@@ -1,37 +1,31 @@
-FROM debian:bullseye as builder
+# syntax=docker/dockerfile:1
 
-ARG NODE_VERSION=19.7.0
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Dockerfile reference guide at
+# https://docs.docker.com/go/dockerfile-reference/
 
-RUN apt-get update; apt install -y curl
-RUN curl https://get.volta.sh | bash
-ENV VOLTA_HOME /root/.volta
-ENV PATH /root/.volta/bin:$PATH
-RUN volta install node@${NODE_VERSION}
+# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
 
-#######################################################################
+ARG NODE_VERSION=21.7.1
 
-RUN mkdir /app
-WORKDIR /app
+# FROM node:${NODE_VERSION}-alpine
+FROM node:18-slim
 
-# NPM will not install any package listed in "devDependencies" when NODE_ENV is set to "production",
-# to install all modules: "npm install --production=false".
-# Ref: https://docs.npmjs.com/cli/v9/commands/npm-install#description
-
+# Use production node environment by default.
 ENV NODE_ENV production
 
+WORKDIR /usr/src/app
+
+USER root
+
+# Copy the rest of the source files into the image.
 COPY . .
 
 RUN npm install
-FROM debian:bullseye
+RUN npm i -g @mapbox/node-pre-gyp
+RUN npm i wrtc
 
-LABEL fly_launch_runtime="nodejs"
+# Expose the port that the application listens on.
+# EXPOSE 8000
 
-COPY --from=builder /root/.volta /root/.volta
-COPY --from=builder /app /app
-
-WORKDIR /app
-ENV NODE_ENV production
-ENV PATH /root/.volta/bin:$PATH
-ENV PORT 8080
-
-CMD [ "npm", "run", "start" ]
+CMD node server.js

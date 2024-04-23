@@ -1,19 +1,20 @@
-import * as ws from 'lib0/websocket'
-import * as map from 'lib0/map'
-import * as error from 'lib0/error'
-import * as random from 'lib0/random'
-import * as encoding from 'lib0/encoding'
-import * as decoding from 'lib0/decoding'
-import { ObservableV2 } from 'lib0/observable'
-import * as logging from 'lib0/logging'
-import * as promise from 'lib0/promise'
-import * as bc from 'lib0/broadcastchannel'
-import * as buffer from 'lib0/buffer'
-import * as math from 'lib0/math'
-import { createMutex } from 'lib0/mutex'
+import * as ws from 'lib0-server-ws/websocket'
+import * as map from 'lib0-server-ws/map'
+import * as error from 'lib0-server-ws/error'
+import * as random from 'lib0-server-ws/random'
+import * as encoding from 'lib0-server-ws/encoding'
+import * as decoding from 'lib0-server-ws/decoding'
+import { ObservableV2 } from 'lib0-server-ws/observable'
+import * as logging from 'lib0-server-ws/logging'
+import * as promise from 'lib0-server-ws/promise'
+import * as bc from 'lib0-server-ws/broadcastchannel'
+import * as buffer from 'lib0-server-ws/buffer'
+import * as math from 'lib0-server-ws/math'
+import { createMutex } from 'lib0-server-ws/mutex'
 
+import wrtc from 'wrtc';
 import * as Y from 'yjs' // eslint-disable-line
-import Peer from 'simple-peer/simplepeer.min.js'
+import Peer from "simple-peer"
 
 import * as syncProtocol from 'y-protocols/sync'
 import * as awarenessProtocol from 'y-protocols/awareness'
@@ -181,7 +182,7 @@ export class WebrtcConn {
     /**
      * @type {any}
      */
-    this.peer = new Peer({ initiator, ...room.provider.peerOpts })
+    this.peer = new Peer({ initiator, ...room.provider.peerOpts, wrtc })
     this.peer.on('signal', signal => {
       if (this.glareToken === undefined) {
         // add some randomness to the timestamp of the offer

@@ -1,10 +1,12 @@
 /* eslint-env browser */
 
-import * as encoding from 'lib0/encoding'
-import * as decoding from 'lib0/decoding'
-import * as promise from 'lib0/promise'
-import * as error from 'lib0/error'
-import * as string from 'lib0/string'
+import * as encoding from 'lib0-server-ws/encoding'
+import * as decoding from 'lib0-server-ws/decoding'
+import * as promise from 'lib0-server-ws/promise'
+import * as error from 'lib0-server-ws/error'
+import * as string from 'lib0-server-ws/string'
+
+const crypto = globalThis.crypto;
 
 /**
  * @param {string} secret
